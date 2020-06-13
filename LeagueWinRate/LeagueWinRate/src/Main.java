@@ -36,7 +36,6 @@ public class Main {
      * good to make the variable accessible everywhere but most of the time it is good to limit it
      * somewhere
      */
-
     Scanner scanner = new Scanner(System.in);
 
     if (start) {
@@ -66,20 +65,23 @@ public class Main {
 
       Random dodge = new Random();
       int num;
-      for (int counter = 0; counter < 2; counter += 1) {
+      for (int counter = 0; counter < 2; counter++) {
         num = 1 + dodge.nextInt(1);
+
       }
       /*
        * Precedence is key for setting up a program that contains math. It is basically what will
        * execute first based on operation. The most common way to get around precedence are ().
        */
+
     }
     /*
      * I am only setting these variables at the moment as an example of what I will do when I get
      * the data I need for each player who plays the game.
      */
 
-    String apiKey = "RGAPI-a96bd243-d636-4918-a6df-1903cff1999d";
+
+    String apiKey = "RGAPI-2d800f9b-e970-4986-b81e-d3a91d9c80f3";
     /*
      * This is the API key that allows me to access the data I need. It allows the developers to
      * know that it is my account accessing the information. This key will change by account. This
@@ -98,7 +100,7 @@ public class Main {
     String summonerName = scanner.nextLine();
     // This will grab the string the user enters and assigns it to the variable summonerName.
 
-    String urlToAPI = "https://" + region + ".api.riotgames.com/lol/summoner/v4/summoners/by-"
+    String urlToAPIOne = "https://" + region + ".api.riotgames.com/lol/summoner/v4/summoners/by-"
         + "name/" + summonerName + "?api_key=" + apiKey;
     /*
      * The API website has a specific pattern to its URL.In this instance the pattern is always
@@ -107,10 +109,10 @@ public class Main {
      * are searching '?api_key=' then the API key. This code concatenates all these components and
      * assigns them to urlToAPI
      */
-    System.out.println(urlToAPI);
+    // System.out.println(urlToAPIOne);
     // Just a print statement to make sure there are no troubles with the API URL
 
-    URL summonerv4API = new URL(urlToAPI);
+    URL summonerv4API = new URL(urlToAPIOne);
     /*
      * This will be the first time I use the URL class. This will tell the program to create a 'new'
      * 'URL' object using the URL, in string format, provided as an argument. I then assign this
@@ -144,6 +146,9 @@ public class Main {
      * also use == to be able to determine if the connection to the URL was established but I feel
      * that the equals method is more elegant.
      */
+    String encryptedSummonerID = "";
+    String inGameName = "";
+    long level = 0;
     if (responseCodeString.equals("200")) {
       System.out.println("Response code: " + responseCodeString + "\nPermission granted.");
       Scanner scanner2 = new Scanner(summonerv4API.openStream());
@@ -157,8 +162,20 @@ public class Main {
        * In other words, it gets the JSON text from the specified URL and converts it to a String.
        */
 
-      System.out.println(output);
+      // System.out.println(output);
       // This will print out the information from the API that was received.
+
+      // JSONParser parse = new JSONParser();
+      // JSONObject jobj = (JSONObject)parse.parse(output);
+      // JSONArray jsonarr1 = (JSONArray) jobj.get("id");
+      // System.out.println(jobj.get("id"));
+
+      JSONInterpreter summonerID = new JSONInterpreter(output);
+      encryptedSummonerID = summonerID.getID();
+      inGameName = summonerID.getName();
+      level = summonerID.getLevel();
+      // System.out.println(encryptedSummonerID);
+
     } else {
       System.out.println("Something went wrong!");
       System.out.println("Response code: " + responseCodeString);
@@ -215,49 +232,96 @@ public class Main {
      * This was my first attempt at obtaining the encrypted id but after searching multiple accounts
      * I realized that not all are the same length.
      */
-    // String testUsername = "notmalcolmtheking";
-    // System.out.println(testMethod(testUsername));
-    System.out.println(testMethod(summonerName));
-    System.out.println(testMethodTwo(summonerName));
-    boolean checkIfCreator = testMethodTwo(summonerName);
-    while (checkIfCreator) {
-      System.out.println("Hello Robert!");
-      checkIfCreator = false;
-    }
-    do {
-      System.out.println("Hello!");
-      checkIfCreator = false;
-    } while (checkIfCreator);
-    /* This loop will always happen at least 1 time. */
 
-  }
+    // System.out.println(encryptedSummonerID);
+    // System.out.println("Name: " + inGameName);
+    // System.out.println("Level: " + level);
 
+    String urlToAPITwo = "https://" + region + ".api.riotgames.com/lol/league/v4/entries/by-"
+        + "summoner/" + encryptedSummonerID + "?api_key=" + apiKey;
 
-  public static boolean testMethod(String username) {
-    /*
-     * This is a method header with 1 parameter. A header contains usually public for a method,
-     * static, the type it is returning, it's name, and parameters in ().
-     */
-    String myUsername = "malcolmtheking";
-    if (username == myUsername) {
-      return true;
+    // System.out.println(urlToAPITwo);
+    URL leaguev4API = new URL(urlToAPITwo);
+    HttpURLConnection connectToTheURLTwo = (HttpURLConnection) leaguev4API.openConnection();
+    connectToTheURLTwo.setRequestMethod("GET");
+    int responseCodeTwo = connectToTheURLTwo.getResponseCode();
+    String responseCodeStringTwo = Integer.toString(responseCodeTwo);
+
+    String rank = "";
+    String tier = "";
+    long wins = 0;
+    long losses = 0;
+    long leaguePoints = 0;
+    if (responseCodeStringTwo.equals("200")) {
+      // System.out.println("Response code: " + responseCodeStringTwo + "\nPermission granted.");
+      Scanner scanner3 = new Scanner(leaguev4API.openStream());
+      String output2 = scanner3.nextLine();
+      /*
+       * This scanner is for receiving information from the API then assigning it to the variable
+       * output as a String. I needed to create a new Scanner object because it is not user input
+       * for this, it is information in JSON formatting. The openStream method is from the URL class
+       * and
+       * "Opens a connection to this URL and returns an InputStream for reading from that connection."
+       * In other words, it gets the JSON text from the specified URL and converts it to a String.
+       */
+
+      // System.out.println(output2);
+      // This will print out the information from the API that was received.
+      JSONInterpreterTwo ranked = new JSONInterpreterTwo(output2);
+      tier = ranked.getTier();
+      rank = ranked.getRank();
+      wins = ranked.getWins();
+      losses = ranked.getLosses();
+      leaguePoints = ranked.getLP();
     } else {
-      return false;
+      System.out.println("Something went wrong!");
+      System.out.println("Response code: " + responseCodeStringTwo);
     }
-    /*
-     * This will always return false since I am using the == way to check if the entered name is
-     * malcolmtheking. The reason is because it is a different place in memory than the entered
-     * name. If I use the compareTo() method or the equals() method it would return true.
-     */
-
-  }
-
-  public static boolean testMethodTwo(String username) {
-    String myUsername = "malcolmtheking";
-    if (username.equalsIgnoreCase(myUsername)) {
-      return true;
-    } else {
-      return false;
+    switch (responseCodeStringTwo) {
+      case "400":
+        System.out.println("Bad request");
+        break;
+      case "401":
+        System.out.println("Unauthorized");
+        break;
+      case "403":
+        System.out.println("Forbidden");
+        break;
+      case "404":
+        System.out.println("Data not found");
+        break;
+      case "405":
+        System.out.println("Method not allowed");
+        break;
+      case "415":
+        System.out.println("Unsupported media type");
+        break;
+      case "429":
+        System.out.println("Rate limit exceeded");
+        break;
+      case "500":
+        System.out.println("Internal server error");
+        break;
+      case "502":
+        System.out.println("Bad gateway");
+        break;
+      case "503":
+        System.out.println("Service unavailable");
+        break;
+      case "504":
+        System.out.println("Gateway timeout");
+        break;
     }
+
+    System.out.println("Name: " + inGameName);
+    System.out.println("Level: " + level);
+    System.out.println(tier + " " + rank + " " + leaguePoints + " lp");
+    System.out.println("Wins: " + wins);
+    System.out.println("Losses: " + losses);
+    double win = (double) wins;
+    double loss = (double) losses;
+    int winRatio = (int) (((win) / (win + loss)) * 100);
+    System.out.println("Win Ratio: " + winRatio + "%");
+
   }
 }
