@@ -1,18 +1,48 @@
 // Robert McNiven
+
 // This class is to parse the data from the second APi
-import org.json.simple.parser.ParseException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
+/**
+ * @author Robert McNiven
+ *
+ */
 public class JSONInterpreterTwo {
 
   // Fields
   // There are more fields in this JSON file that I need to set.
+
+  /**
+   * The amount of wins the player has, long.
+   * 
+   */
   private long wins;
+
+  /**
+   * The amount of losses the player has, long.
+   * 
+   */
   private long losses;
+
+  /**
+   * The amount of league points the player has, long.
+   * 
+   */
   private long leaguePoints;
+
+  /**
+   * The tier the player is currently at.
+   * 
+   */
   private String tier;
+
+  /**
+   * The rank the player is currently at.
+   * 
+   */
   private String rank;
 
   // Constructors
@@ -23,7 +53,14 @@ public class JSONInterpreterTwo {
   }
 
   // This is the main constructor that sets all the fields for the objects.
-  public JSONInterpreterTwo(String JSONText) throws ParseException {
+
+  /**
+   * Method that parses the second set of data from the API.
+   * 
+   * @param jsonText The output from the API.
+   * @throws ParseException Throws exception if an error is found while parsing.
+   */
+  public JSONInterpreterTwo(String jsonText) throws ParseException {
     // I am creating a new JSONParser object that I use to turn the data I need to parse into.
     JSONParser parse = new JSONParser();
     // I have to turn the parse object into a JSONArray because the data has 2 sets of values for
@@ -31,7 +68,7 @@ public class JSONInterpreterTwo {
     // In the step below I am using the parameter as an argument for the parse() method that will
     // tell the program to treat this String of text as a JSON file with keys and values for those
     // keys.
-    JSONArray jsonarr = (JSONArray) parse.parse(JSONText);
+    JSONArray jsonarr = (JSONArray) parse.parse(jsonText);
     /*
      * This is where I got confused because not all accounts have RANKED_SOLO_5x5 as their 0th
      * element, so I had to get the first element of the JSON array and check to see if it was the
@@ -69,27 +106,48 @@ public class JSONInterpreterTwo {
   }
 
   // Methods
-  // Method to get the players tier
+
+  /**
+   * Get the players tier.
+   * 
+   * @return The players in game tier
+   */
   public String getTier() {
     return tier;
   }
 
-  // Method to get the players rank
+  /**
+   * Get the players rank.
+   * 
+   * @return The players in game rank.
+   */
   public String getRank() {
     return rank;
   }
 
-  // Method to get the players wind
+  /**
+   * Get the players wins.
+   * 
+   * @return The amount of wins the player has.
+   */
   public long getWins() {
     return wins;
   }
 
-  // Method to get the players losses
+  /**
+   * Get the players losses.
+   * 
+   * @return The amount of losses the player has.
+   */
   public long getLosses() {
     return losses;
   }
 
-  // Method to get the players league points
+  /**
+   * Get the players league points.
+   * 
+   * @return The amount of league points the player has
+   */
   public long getLP() {
     return leaguePoints;
   }

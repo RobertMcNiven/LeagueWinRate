@@ -6,16 +6,27 @@
 import java.net.HttpURLConnection;
 // import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
+
 // These are the classes needed to be able to use the code I wrote.
 // Above this comment are the packages that are included within Java already
 
-
-
+/**
+ * This is the Main file to run in the program.
+ * 
+ * @author Robert McNiven
+ *
+ */
 public class Main {
 
+  /**
+   * The main class for the process of looking up player data from Riot's public API.
+   * 
+   * @param args array of strings which stores arguments
+   * @throws Exception Exception thrown because the program is accessing an HTTPURL that might fail.
+   */
   public static void main(String[] args) throws Exception {
     /*
      * I needed to add the "throws Exception" because the connection to the URL might not be
@@ -54,11 +65,12 @@ public class Main {
       // I used it here because I want the user to only check their name once.
       System.out.println("How many players would you like to look up?");
       int amountOfPlayers = scanner.nextInt();
-
+      System.out.println(summonerName + amountOfPlayers);
       int wins = 100;
       int totalGames = 200;
       double winRatio = wins / totalGames;
       final String message = winRatio < .5 ? "dodge" : "play";
+      System.out.println(message);
       /*
        * If the statement is true it will assign "dodge" to message, if it is false it will assign
        * "play" to message.
@@ -68,7 +80,7 @@ public class Main {
       int num;
       for (int counter = 0; counter < 2; counter++) {
         num = 1 + dodge.nextInt(1);
-
+        System.out.println(num);
       }
       /*
        * Precedence is key for setting up a program that contains math. It is basically what will
@@ -96,7 +108,7 @@ public class Main {
       System.out.println("Please input a whole number greater than 0.");
       System.exit(1);
     }
-    String blank = scanner.nextLine();
+    String blankLine = scanner.nextLine();
     // I need this as a blank input to 'eat' the unseen characters that happen when inputing info.
     ArrayList<Player> teamStats = new ArrayList<Player>();
     // I initialized the arraylist that I will store all the Player objects in and find the average
@@ -104,14 +116,14 @@ public class Main {
     // int amountOfSummonersCheck = amountOfSummoners;
     // I use this after the do-while loop to use methods on each individual player object.
     do {
-      String apiKey = "RGAPI-df78c30a-58d7-4aa1-ada2-1b8c810d26a5";
+      String apiKey = "APIKeyGoesHere";
       /*
        * This is the API key that allows me to access the data I need. It allows the developers to
        * know that it is my account accessing the information. This key will change by account. This
        * API key is renewed every 3 days in order to stop people from over accessing their servers
        * and reduce traffic
        */
-      if (apiKey.equals("")) {
+      if (apiKey.equals("APIKeyGoesHere")) {
         System.out.println(
             "Please change the value of apiKey with your own API key, from https://developer."
                 + "riotgames.com/ , to use the program");
@@ -129,7 +141,7 @@ public class Main {
       String summonerName = scanner.nextLine();
       // This will grab the string the user enters and assigns it to the variable summonerName.
 
-      String urlToAPIOne = "https://" + region + ".api.riotgames.com/lol/summoner/v4/summoners/by-"
+      String urlToApiOne = "https://" + region + ".api.riotgames.com/lol/summoner/v4/summoners/by-"
           + "name/" + summonerName + "?api_key=" + apiKey;
       /*
        * The API website has a specific pattern to its URL.In this instance the pattern is always
@@ -141,7 +153,7 @@ public class Main {
       // System.out.println(urlToAPIOne);
       // Just a print statement to make sure there are no troubles with the API URL
 
-      URL summonerv4API = new URL(urlToAPIOne);
+      URL summonerv4Api = new URL(urlToApiOne);
       /*
        * This will be the first time I use the URL class. This will tell the program to create a
        * 'new' 'URL' object using the URL, in string format, provided as an argument. I then assign
@@ -149,19 +161,19 @@ public class Main {
        * will be accessing
        */
 
-      HttpURLConnection connectToTheURL = (HttpURLConnection) summonerv4API.openConnection();
+      HttpURLConnection connectToTheUrl = (HttpURLConnection) summonerv4Api.openConnection();
       /*
        * This is me casting the URL to an HttpURLConnection then using the openConnection method to
        * establish a connection to that URL. This allows me to make changes of get information from
        * the API.
        */
-      connectToTheURL.setRequestMethod("GET");
+      connectToTheUrl.setRequestMethod("GET");
       /*
        * I am using the setRequestMethod from the HttpURLConnection class to tell it that I will be
        * receiving information rather than editing it or deleting it. It accepts 1 argument of one
        * of the following: GET POST HEAD OPTIONS PUT DELETE TRACE
        */
-      int responseCode = connectToTheURL.getResponseCode();
+      int responseCode = connectToTheUrl.getResponseCode();
       /*
        * This method "getResponseCode" from the HttpURLConnection class returns the response code of
        * the web page the codes are as follows: 400 Bad request 401 Unauthorized 403 Forbidden 404
@@ -186,15 +198,15 @@ public class Main {
       if (responseCodeString.equals("200")) {
         // Checks to see if the pages response code is 200, which means everything worked.
         System.out.println("Response code: " + responseCodeString + "\nPermission granted.");
-        Scanner scanner2 = new Scanner(summonerv4API.openStream());
+        Scanner scanner2 = new Scanner(summonerv4Api.openStream());
         String output = scanner2.nextLine();
         /*
          * This scanner is for receiving information from the API then assigning it to the variable
          * output as a String. I needed to create a new Scanner object because it is not user input
          * for this, it is information in JSON formatting. The openStream method is from the URL
-         * class and
-         * "Opens a connection to this URL and returns an InputStream for reading from that connection."
-         * In other words, it gets the JSON text from the specified URL and converts it to a String.
+         * class and "Opens a connection to this URL and returns an InputStream for reading from
+         * that connection." In other words, it gets the JSON text from the specified URL and
+         * converts it to a String.
          */
 
         // System.out.println(output);
@@ -256,6 +268,9 @@ public class Main {
         case "504":
           System.out.println("Gateway timeout");
           break;
+        default:
+          System.out.println("The error that occurred is not listed.");
+          break;
       }
       /*
        * I added this switch statement for all the different possibilities that can occur while
@@ -279,13 +294,13 @@ public class Main {
        * This next part does the same as accessing the last API. It sets a url for the API, Casts it
        * to an HTTPURL, opens the stream and gets the data on the page
        */
-      String urlToAPITwo = "https://" + region + ".api.riotgames.com/lol/league/v4/entries/by-"
+      String urlToApiTwo = "https://" + region + ".api.riotgames.com/lol/league/v4/entries/by-"
           + "summoner/" + encryptedSummonerID + "?api_key=" + apiKey;
 
-      URL leaguev4API = new URL(urlToAPITwo);
-      HttpURLConnection connectToTheURLTwo = (HttpURLConnection) leaguev4API.openConnection();
-      connectToTheURLTwo.setRequestMethod("GET");
-      int responseCodeTwo = connectToTheURLTwo.getResponseCode();
+      URL leaguev4Api = new URL(urlToApiTwo);
+      HttpURLConnection connectToTheUrlTwo = (HttpURLConnection) leaguev4Api.openConnection();
+      connectToTheUrlTwo.setRequestMethod("GET");
+      int responseCodeTwo = connectToTheUrlTwo.getResponseCode();
       String responseCodeStringTwo = Integer.toString(responseCodeTwo);
 
       // These are initializing all of the data so I can later use it outside of the if statement.
@@ -298,15 +313,15 @@ public class Main {
 
       if (responseCodeStringTwo.equals("200")) {
         // System.out.println("Response code: " + responseCodeStringTwo + "\nPermission granted.");
-        Scanner scanner3 = new Scanner(leaguev4API.openStream());
+        Scanner scanner3 = new Scanner(leaguev4Api.openStream());
         String output2 = scanner3.nextLine();
         /*
          * This scanner is for receiving information from the API then assigning it to the variable
          * output as a String. I needed to create a new Scanner object because it is not user input
          * for this, it is information in JSON formatting. The openStream method is from the URL
-         * class and
-         * "Opens a connection to this URL and returns an InputStream for reading from that connection."
-         * In other words, it gets the JSON text from the specified URL and converts it to a String.
+         * class and "Opens a connection to this URL and returns an InputStream for reading from
+         * that connection." In other words, it gets the JSON text from the specified URL and
+         * converts it to a String.
          */
 
         // System.out.println(output2);
@@ -356,6 +371,9 @@ public class Main {
           break;
         case "504":
           System.out.println("Gateway timeout");
+          break;
+        default:
+          System.out.println("The error that occurred is not listed.");
           break;
       }
 
@@ -448,7 +466,7 @@ public class Main {
       // Array Stuff
 
       // Declaring an Array and listing its values
-      int listOfNumbers[] = {100005, 567, 2, (int) Math.PI, 4, 3456, 988, 12, 18, 5389};
+      int[] listOfNumbers = {100005, 567, 2, (int) Math.PI, 4, 3456, 988, 12, 18, 5389};
       // Initializing lowest num for array.
       int lowestNumInArray = listOfNumbers[0];
       int accumulatorVariable = 0;
@@ -459,15 +477,19 @@ public class Main {
           lowestNumInArray = listOfNumbers[i];
         }
       }
+      System.out.println(accumulatorVariable);
       int lowestNumberIndex = 0;
       for (int i = 0; i < listOfNumbers.length; i++) {
         if (lowestNumInArray == listOfNumbers[i]) {
           lowestNumberIndex = i;
         }
       }
+      System.out.println(lowestNumberIndex);
 
       int[][] grid = {{1, 2, 3}, {1023, 31, 56}, {12, 34, 21}};
       System.out.println(grid[1][2]);
+
+      scanner.close();
     }
   }
 }

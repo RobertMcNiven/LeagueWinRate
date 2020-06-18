@@ -1,33 +1,55 @@
-// Robert McNiven
-// This class is to parse the first set of data I get from the API.
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+/**
+ * This class is to parse the first set of data I get from the API.
+ * 
+ * @author Robert McNiven
+ *
+ */
 public class JSONInterpreter {
 
   // Fields
 
-  /*
-   * From this data that I am parsing, I will need to obtain the encrypted summoner ID, the players
-   * full in game name, and the players in game level
+  /**
+   * The encrypted player ID, String because it contains numbers and characters.
+   * 
    */
   private String id;
+
+  /**
+   * The players in game name.
+   * 
+   */
   private String name;
+
+  /**
+   * The players in game level.
+   * 
+   */
   private long level;
 
   // Constructor
-  // I need a blank constructor so I can create an instance of the class outside of an if statement.
+
+  /**
+   * I need a blank constructor so I can create an instance of the class outside of an if statement.
+   */
   public JSONInterpreter() {
 
   }
 
-  // This constructor is where I actually parse the data from the first API.
-  public JSONInterpreter(String JSONText) throws ParseException {
+  /**
+   * This constructor is where the data from the first API is parsed.
+   * 
+   * @param jsonText A string that will be treated as a JSON file
+   * @throws ParseException Throws exception if an error is found while parsing.
+   */
+  public JSONInterpreter(String jsonText) throws ParseException {
     // I am using the String of text I get from the website as the parameter.
     JSONParser parse = new JSONParser();
     // This creates a new JSONParser object. It allows me to later cast this object to s JSONObject.
-    JSONObject jobj = (JSONObject) parse.parse(JSONText);
+    JSONObject jobj = (JSONObject) parse.parse(jsonText);
     // This is where I actually cast the JSONParser to a JSONObject and the parse() method takes the
     // string of text I provided and separates it into keys and their values. Key names are
     // container names that hold the data that they describe.
@@ -44,17 +66,30 @@ public class JSONInterpreter {
   }
 
   // Methods
-  // Method to get the encrypted summoner ID
+
+  /**
+   * Get the encrypted summoner ID.
+   * 
+   * @return the players encrypted ID
+   */
   public String getID() {
     return id;
   }
 
-  // Method to get the players in game name.
+  /**
+   * Get the players in game name.
+   * 
+   * @return the players in game name
+   */
   public String getName() {
     return name;
   }
 
-  // Method to get the players in game level.
+  /**
+   * Get the players in game level.
+   * 
+   * @return the players in game level
+   */
   public long getLevel() {
     return level;
   }
